@@ -5409,82 +5409,82 @@
 			</objects>
 			<groups>
 				<ObjectGroup name="right_leg">
-					<members> addbrev_r addlong_r addmagDist_r addmagIsch_r addmagMid_r addmagProx_r bflh_r bfsh_r edl_r ehl_r fdl_r fhl_r gaslat_r gasmed_r glmax1_r glmax2_r glmax3_r glmed1_r glmed2_r glmed3_r glmin1_r glmin2_r glmin3_r grac_r iliacus_r perbrev_r perlong_r piri_r psoas_r recfem_r sart_r semimem_r semiten_r soleus_r tfl_r tibant_r tibpost_r vasint_r vaslat_r vasmed_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="left_leg">
-					<members> addbrev_l addlong_l addmagDist_l addmagIsch_l addmagMid_l addmagProx_l bflh_l bfsh_l edl_l ehl_l fdl_l fhl_l gaslat_l gasmed_l glmax1_l glmax2_l glmax3_l glmed1_l glmed2_l glmed3_l glmin1_l glmin2_l glmin3_l grac_l iliacus_l perbrev_l perlong_l piri_l psoas_l recfem_l sart_l semimem_l semiten_l soleus_l tfl_l tibant_l tibpost_l vasint_l vaslat_l vasmed_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_add_r">
-					<members> addbrev_r addlong_r addmagDist_r addmagIsch_r addmagMid_r addmagProx_r bflh_r grac_r semimem_r semiten_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_abd_r">
-					<members> glmax1_r glmed1_r glmed2_r glmed3_r glmin1_r glmin2_r glmin3_r piri_r sart_r tfl_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_flex_r">
-					<members> addbrev_r addlong_r glmin1_r grac_r iliacus_r psoas_r recfem_r sart_r tfl_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_ext_r">
-					<members> addlong_r addmagDist_r addmagIsch_r addmagMid_r addmagProx_r bflh_r glmax1_r glmax2_r glmax3_r glmed1_r glmed2_r glmed3_r glmin3_r semimem_r semiten_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_inrot_r">
-					<members> glmed1_r glmed2_r glmed3_r glmin1_r iliacus_r psoas_r tfl_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_exrot_r">
-					<members> glmin3_r piri_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="knee_flex_r">
-					<members> bflh_r bfsh_r gaslat_r gasmed_r grac_r sart_r semimem_r semiten_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="knee_ext_r">
-					<members> recfem_r vasint_r vaslat_r vasmed_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="ankle_df_r">
-					<members> edl_r ehl_r tibant_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="ankle_pf_r">
-					<members> fdl_r fhl_r gaslat_r gasmed_r perbrev_r perlong_r soleus_r tibpost_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="everter_r">
-					<members> edl_r perbrev_r perlong_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="inverter_r">
-					<members> ehl_r fdl_r fhl_r tibant_r tibpost_r</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_add_l">
-					<members> addbrev_l addlong_l addmagDist_l addmagIsch_l addmagMid_l addmagProx_l bflh_l grac_l semimem_l semiten_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_abd_l">
-					<members> glmax1_l glmed1_l glmed2_l glmed3_l glmin1_l glmin2_l glmin3_l piri_l sart_l tfl_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_flex_l">
-					<members> addbrev_l addlong_l glmin1_l grac_l iliacus_l psoas_l recfem_l sart_l tfl_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_ext_l">
-					<members> addlong_l addmagDist_l addmagIsch_l addmagMid_l addmagProx_l bflh_l glmax1_l glmax2_l glmax3_l glmed1_l glmed2_l glmed3_l glmin3_l semimem_l semiten_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_exrot_l">
-					<members> glmin3_l piri_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="hip_inrot_l">
-					<members> glmed1_l glmed2_l glmed3_l glmin1_l iliacus_l psoas_l tfl_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="knee_flex_l">
-					<members> bflh_l bfsh_l gaslat_l gasmed_l grac_l sart_l semimem_l semiten_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="knee_ext_l">
-					<members> recfem_l vasint_l vaslat_l vasmed_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="ankle_df_l">
-					<members> edl_l ehl_l tibant_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="ankle_pf_l">
-					<members> fdl_l fhl_l gaslat_l gasmed_l perbrev_l perlong_l soleus_l tibpost_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="everter_l">
-					<members> edl_l perbrev_l perlong_l</members>
+					<members />
 				</ObjectGroup>
 				<ObjectGroup name="inverter_l">
-					<members> ehl_l fdl_l fhl_l tibant_l tibpost_l</members>
+					<members />
 				</ObjectGroup>
 			</groups>
 		</ForceSet>
@@ -5703,7 +5703,7 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_r</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.035341737274833189 -0.13501271243080487 0.05359929189468994</location>
+					<location>-0.015357219524525454 -0.13501271243080487 0.05359929189468994</location>
 					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
 					<fixed>false</fixed>
 				</Marker>
@@ -5711,7 +5711,7 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_r</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>0.010326195326923141 -0.13544459391377039 0.052643574364016621</location>
+					<location>0.034783949784258333 -0.13544459391377039 0.052643574364016621</location>
 					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
 					<fixed>false</fixed>
 				</Marker>
@@ -5719,7 +5719,7 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_r</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.034568017187976877 -0.19049102268158685 0.055636145054167585</location>
+					<location>-0.016499252707476365 -0.19049102268158685 0.055636145054167585</location>
 					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
 					<fixed>false</fixed>
 				</Marker>
@@ -5727,7 +5727,7 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_r</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.0050000000000000001 -0.42717742197190439 0.052999999999999999</location>
+					<location>-0.0050000000000000001 -0.40510242030300492 0.052999999999999999</location>
 					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
 					<fixed>false</fixed>
 				</Marker>
@@ -5791,7 +5791,7 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_l</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.0029832536212459218 -0.14232739550100001 -0.053333971812884302</location>
+					<location>0.026770103676007365 -0.14232739550100001 -0.053333971812884302</location>
 					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
 					<fixed>false</fixed>
 				</Marker>
@@ -5799,7 +5799,7 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_l</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.045904801072046982 -0.14761410332944797 -0.044415277698210437</location>
+					<location>-0.023458036091669611 -0.14761410332944797 -0.044415277698210437</location>
 					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
 					<fixed>false</fixed>
 				</Marker>
@@ -5807,7 +5807,7 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_l</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.046196052462576888 -0.20304717072685047 -0.061360679500218042</location>
+					<location>-0.023385923145741869 -0.20304717072685047 -0.061360679500218042</location>
 					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
 					<fixed>false</fixed>
 				</Marker>
@@ -5815,7 +5815,7 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_l</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.0050000000000000001 -0.38879999999999998 -0.052999999999999999</location>
+					<location>-0.0050000000000000001 -0.39947096150598965 -0.052999999999999999</location>
 					<!--Flag (true or false) specifying whether the marker is fixed in its parent frame during the marker placement step of scaling.  If false, the marker is free to move within its parent Frame to match its experimental counterpart.-->
 					<fixed>false</fixed>
 				</Marker>
@@ -5905,7 +5905,7 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/pelvis</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.16374465117561102 0.12200675460135324 0.12176040107784175</location>
+					<location>-0.11100662404719258 0.097835505023997821 0.1315068744780562</location>
 				</Marker>
 				<Marker name="LICR">
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
@@ -5969,13 +5969,49 @@
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_r</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>0.0022995473225435746 -0.19727436788515521 0.051391941348555854</location>
+					<location>0.035461540991677629 -0.19727436788515521 0.051391941348555854</location>
 				</Marker>
 				<Marker name="LSK4">
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
 					<socket_parent_frame>/bodyset/tibia_l</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>0.0018517127433430715 -0.20997029277688783 -0.04891357194914691</location>
+					<location>0.02739083751031322 -0.20997029277688783 -0.04891357194914691</location>
+				</Marker>
+				<Marker name="RFMT1">
+					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
+					<socket_parent_frame>/bodyset/toes_r</socket_parent_frame>
+					<!--The fixed location of the station expressed in its parent frame.-->
+					<location>0.0065780382943254612 0.020628834357710131 -0.027306455162921711</location>
+				</Marker>
+				<Marker name="RFMT2">
+					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
+					<socket_parent_frame>/bodyset/toes_r</socket_parent_frame>
+					<!--The fixed location of the station expressed in its parent frame.-->
+					<location>0.00094852723376864789 0.017148648205806138 0.0012722853126719696</location>
+				</Marker>
+				<Marker name="RFMT5">
+					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
+					<socket_parent_frame>/bodyset/toes_r</socket_parent_frame>
+					<!--The fixed location of the station expressed in its parent frame.-->
+					<location>-0.038766065202474095 0.019978069412125293 0.040637587495676378</location>
+				</Marker>
+				<Marker name="LFMT1">
+					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
+					<socket_parent_frame>/bodyset/toes_l</socket_parent_frame>
+					<!--The fixed location of the station expressed in its parent frame.-->
+					<location>0.00086403213339748819 0.023489623301441102 0.028292025198285969</location>
+				</Marker>
+				<Marker name="LFMT2">
+					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
+					<socket_parent_frame>/bodyset/toes_l</socket_parent_frame>
+					<!--The fixed location of the station expressed in its parent frame.-->
+					<location>-0.001320767730117467 0.01777402315691734 -0.00031729394778423625</location>
+				</Marker>
+				<Marker name="LFMT5">
+					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
+					<socket_parent_frame>/bodyset/toes_l</socket_parent_frame>
+					<!--The fixed location of the station expressed in its parent frame.-->
+					<location>-0.038131414321473572 0.018782651411395165 -0.039575611909880723</location>
 				</Marker>
 			</objects>
 			<groups />
