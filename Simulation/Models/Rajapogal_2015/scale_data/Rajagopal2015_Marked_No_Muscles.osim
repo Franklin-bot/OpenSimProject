@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="40000">
-	<Model name="FullBodyModel_MuscleActuatedLowerLimb_TorqueActuatedUpperBody">
+	<Model name="Rajapogal_FullBody">
 		<defaults>
 			<ControlLinear name="default">
 				<is_model_control>true</is_model_control>
@@ -5979,39 +5979,39 @@
 				</Marker>
 				<Marker name="RFMT1">
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
-					<socket_parent_frame>/bodyset/toes_r</socket_parent_frame>
+					<socket_parent_frame>/bodyset/calcn_r</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>0.0065780382943254612 0.020628834357710131 -0.027306455162921711</location>
+					<location>0.18537803829432545 0.01862883435771015 -0.026226455162921703</location>
 				</Marker>
 				<Marker name="RFMT2">
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
-					<socket_parent_frame>/bodyset/toes_r</socket_parent_frame>
+					<socket_parent_frame>/bodyset/calcn_r</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>0.00094852723376864789 0.017148648205806138 0.0012722853126719696</location>
+					<location>0.17974852723376863 0.015148648205806161 0.0023522853126719655</location>
 				</Marker>
 				<Marker name="RFMT5">
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
-					<socket_parent_frame>/bodyset/toes_r</socket_parent_frame>
+					<socket_parent_frame>/bodyset/calcn_r</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.038766065202474095 0.019978069412125293 0.040637587495676378</location>
+					<location>0.14003393479752591 0.017978069412125312 0.041717587495676355</location>
 				</Marker>
 				<Marker name="LFMT1">
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
-					<socket_parent_frame>/bodyset/toes_l</socket_parent_frame>
+					<socket_parent_frame>/bodyset/calcn_l</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>0.00086403213339748819 0.023489623301441102 0.028292025198285969</location>
+					<location>0.17966403213339749 0.021489623301441118 0.027212025198285958</location>
 				</Marker>
 				<Marker name="LFMT2">
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
-					<socket_parent_frame>/bodyset/toes_l</socket_parent_frame>
+					<socket_parent_frame>/bodyset/calcn_l</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.001320767730117467 0.01777402315691734 -0.00031729394778423625</location>
+					<location>0.17747923226988252 0.015774023156917363 -0.0013972939477842326</location>
 				</Marker>
 				<Marker name="LFMT5">
 					<!--Path to a Component that satisfies the Socket 'parent_frame' of type PhysicalFrame (description: The frame to which this station is fixed.).-->
-					<socket_parent_frame>/bodyset/toes_l</socket_parent_frame>
+					<socket_parent_frame>/bodyset/calcn_l</socket_parent_frame>
 					<!--The fixed location of the station expressed in its parent frame.-->
-					<location>-0.038131414321473572 0.018782651411395165 -0.039575611909880723</location>
+					<location>0.14066858567852641 0.016782651411395184 -0.0406556119098807</location>
 				</Marker>
 			</objects>
 			<groups />
