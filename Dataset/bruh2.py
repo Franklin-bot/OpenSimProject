@@ -28,23 +28,25 @@ imf_6 = imf[5, :, :]  # IMFs corresponding to the 3rd component
 num_generated = 100
 new_dataset_size = original_data.shape
 dataset_of_datasets = np.zeros((num_generated, new_dataset_size[0], new_dataset_size[1]))
-
-for i in range(num_generated):
-    imf_1 *= abs(np.random.normal(loc=1, scale=0.33))
-    imf_2 *= abs(np.random.normal(loc=1, scale=0.33))
-    imf_3 *= abs(np.random.normal(loc=1, scale=0.33))
-    imf_4 *= abs(np.random.normal(loc=1, scale=0.33))
-    imf_5 *= abs(np.random.normal(loc=1, scale=0.33))
-
-    new_dataset = (imf_1 + imf_2 + imf_3 + imf_4 + imf_5 + imf_6).T
-    dataset_of_datasets[i] = new_dataset
-
-print(dataset_of_datasets.shape)
-
-num_datasets = dataset_of_datasets.shape[0]
 num_features = dataset_of_datasets.shape[2]
 
-with PdfPages("No_Time_Augmentation_Normal_Perturbation_1.pdf") as pdf:
+for i in range(num_generated):
+    # imf_1_prime = imf_1 * abs(np.random.normal(loc=1, scale=0.33))
+    # imf_2_prime = imf_2 * abs(np.random.normal(loc=1, scale=0.33))
+    # imf_3_prime = imf_3 * abs(np.random.normal(loc=1, scale=0.33))
+    # imf_4_prime = imf_4 * abs(np.random.normal(loc=1, scale=0.33))
+    # imf_5_prime = imf_5 * abs(np.random.normal(loc=1, scale=0.33))
+
+    imf_1_prime = imf_1 * np.random.uniform(0, 2)
+    imf_2_prime = imf_2 * np.random.uniform(0, 2)
+    imf_3_prime = imf_3 * np.random.uniform(0, 2)
+    imf_4_prime = imf_4 * np.random.uniform(0, 2)
+    imf_5_prime = imf_5 * np.random.uniform(0, 2)
+
+    new_dataset = (imf_1_prime + imf_2_prime + imf_3_prime + imf_4_prime + imf_5_prime + imf_6).T
+    dataset_of_datasets[i] = new_dataset
+
+with PdfPages("No_Time_Augmentation_Uniform_Perturbation_1.pdf") as pdf:
     for i in range(num_features):
         fig, ax = plt.subplots(figsize=(8, 6))
         for j in range(dataset_of_datasets.shape[0]):
