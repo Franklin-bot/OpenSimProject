@@ -40,7 +40,7 @@ kernel = ConstantKernel(constant_value=variance, constant_value_bounds=(1e-3, 1e
 
 
 # Step 3: Generate the GP model based on the original dataset
-gp_model = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=10, random_state=42)
+gp_model = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=10)
 gp_model.fit(time.reshape(-1, 1), original_data)
 
 # Step 4: Generate new datasets using the trained GP model
@@ -49,7 +49,8 @@ generated_datasets = []
 
 for _ in range(n_generated_datasets):
     # Generate new X values to predict
-    x_generated = time + 0.01
+    
+    print(x_generated)
 
     # Predict the new datasets using the GP model
     generated_data = gp_model.predict(x_generated.reshape(-1, 1))
