@@ -5,10 +5,12 @@
 
 import pandas as pd
 import numpy as np
-from scipy.spatial.transform import Rotation
 from itertools import islice
 from IPython.display import display
-
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
+import scipy.interpolate as interpolate
+from scipy import signal
 
 
 # read experimental .mot file and parse it into a header and dataframe
@@ -27,8 +29,6 @@ def parse_motion_file(input_file_path):
 
     return header, dataframe, time
 
-
-
 # create a .mot file using a header and modified dataframe
 def write_motion_file(header, dataframe, time, new_file_name):
 
@@ -42,32 +42,7 @@ def write_motion_file(header, dataframe, time, new_file_name):
     dataframe.insert(loc=0, column = 'time', value = time)
     dataframe.to_csv(path_or_buf=new_file_path, sep='\t', header=True, mode="a", index=False)
 
-
-
-def create_augmented_motion_dataset(input_file_path): #, output_size
-    
-    h, df, t = parse_motion_file(input_file_path)
-    num_features = len(df.columns)
-    num_timesteps = len(df.index)
-
-    # create covariance matrix (numpy array)
-    cov = df.cov()
-
-    # mean of zero
-    noise_mean = np.zeros(num_features)
-
-    # generate noise
-    noise = np.random.multivariate_normal(noise_mean, cov, size=num_timesteps)
-    noise = pd.DataFrame(noise, columns=list(df.columns), dtype=np.float64)
-    display(noise)
-
-    df = df.add(noise)
-    # display(df)
-    
-    write_motion_file(h, df, t, "bruh")
-
-    return
-
+# read IMU data file and parse it into a header and dataframe
 def parse_IMU_file(input_file_path):
     # get header
     input_file = open(input_file_path)
@@ -79,5 +54,77 @@ def parse_IMU_file(input_file_path):
     # display(dataframe)
     display(dataframe)
 
-open('/Users/FranklinZhao/OpenSimProject/Dataset/Motion/Augmented/bruh.mot', 'w').close()
-create_augmented_motion_dataset("/Users/FranklinZhao/OpenSimProject/Simulation/Models/gait2354/inverse_kinematics_data/subject01_walk1_ik.mot")
+# augment motion data by sampling gaussian random points and interpolating
+def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, variance_mod, num_generated):
+    
+    sampling_interval = dataset_freq/sampling_freq
+
+    # array holding standard deviations for each kinmatic feature
+    std_dev = np.ptp(dataset, 0) * variance_mod
+    # indices of rows to be sampled
+    sample_rows = np.arange(start=0, stop=dataset.shape[0], step=sampling_interval, dtype=int)
+    # list of time values of samples
+    time_points = time[sample_rows]
+    # array of values sampled
+    points = dataset[sample_rows, :]
+
+    new_dataset = np.zeros((num_generated, *dataset.shape))
+    for k in range(num_generated):
+        gaussian_points = np.zeros(points.shape)
+        new_motion = np.zeros(dataset.shape)
+        # for each column
+        for i in range (points.shape[1]):
+            # for each row
+            gaussian_points[:, i] = np.random.normal(loc=0, scale=std_dev[i], size=len(time_points)) + points[:, i]
+            # interpolate for each column (feature)
+            cs = interpolate.CubicSpline(time_points, gaussian_points[:, i])
+            # sample values for original frequency
+            new_motion[:, i] = cs(time)
+
+        # add new motion to dataset
+        new_dataset[k, :, :] = new_motion
+    
+    return new_dataset
+
+# plot each feature of multivariate timeseries
+def plotMulvariateCurves(filename, dataset, original_data):
+    num_features = dataset.shape[2]
+    num_generated = dataset.shape[0]
+
+    with PdfPages(filename) as pdf:
+        for i in range(num_features):
+            fig, ax = plt.subplots(figsize=(8, 6))
+            for j in range(num_generated):
+                ax.plot(time, dataset[j][:, i])
+                ax.plot(time, original_data[:, i], color="black")
+            ax.set_xlabel("time")
+            ax.set_ylabel("Kinematics values")
+            ax.set_title(feature_headers[i])
+            pdf.savefig(fig)
+            plt.close(fig)
+            
+        plt.tight_layout()
+
+
+# lowpass filter
+def lowpass_filter(data, fs, fc, order, axis):
+    w = fc / (fs / 2)
+    b, a = signal.butter(order, w, 'low')
+    output = signal.filtfilt(b, a, data, axis=axis)
+    return output
+
+
+# extract original data
+h, df, t = parse_motion_file("/Users/FranklinZhao/OpenSimProject/Simulation/Models/gait2354/inverse_kinematics_data/subject01_walk1_ik.mot")
+original_data = df.to_numpy()
+time = t.to_numpy()
+feature_headers = list(df.columns)
+
+# smooth original data
+smooth_data = lowpass_filter(original_data, 60, 10, 5, 0)
+# create augmented motions
+bruh = TimePointGaussianAugmentation(smooth_data, time, dataset_freq=60, sampling_freq=15, variance_mod=0.05, num_generated=100)
+# smooth augmented motions
+smooth_bruh = lowpass_filter(bruh, 60, 10, 5, 1)
+# plot
+plotMulvariateCurves("bruh.pdf", smooth_bruh, smooth_data)

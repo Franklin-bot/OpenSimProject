@@ -1,26 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from itertools import islice
-from IPython.display import display
-from MEMD_all import memd
 from GenerateDataset import parse_motion_file, write_motion_file
 from matplotlib.backends.backend_pdf import PdfPages
 import pandas as pd
-import scipy.interpolate
-
-def LowPassFilter (dataset, cutoff_frequency):
-    return
-
-
-
-
-
-
-
-
-
-
-
+import scipy.interpolate as interpolate
+from scipy import signal
 
 def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, variance_mod, num_generated):
     
@@ -35,7 +19,6 @@ def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, va
     # array of values sampled
     points = dataset[sample_rows, :]
 
-
     new_dataset = np.zeros((num_generated, *dataset.shape))
     for k in range(num_generated):
         gaussian_points = np.zeros(points.shape)
@@ -43,11 +26,9 @@ def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, va
         # for each column
         for i in range (points.shape[1]):
             # for each row
-            for j in range (len(time_points)):
-                # sample from gaussian distribution
-                gaussian_points[j, i] = np.random.normal(loc=points[j, i], scale=std_dev[i])
+            gaussian_points[:, i] = np.random.normal(loc=0, scale=std_dev[i], size=len(time_points)) + points[:, i]
             # interpolate for each column (feature)
-            cs = scipy.interpolate.CubicSpline(time_points, gaussian_points[:, i])
+            cs = interpolate.CubicSpline(time_points, gaussian_points[:, i])
             # sample values for original frequency
             new_motion[:, i] = cs(time)
 
@@ -56,82 +37,7 @@ def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, va
     
     return new_dataset
 
-
-
-
-
-
-
-# Timeseries augmentation methods cited from:
-# http://mesl.ucsd.edu/pubs/Xiyuan_ICASSP2023_STAug.pdf
-
-def EMDAugmentation(original_data, num_generated):
-    # conduct MEMD
-    imf = memd(original_data)
-    imf_1 = imf[0, :, :]  # IMFs corresponding to the 1st component
-    imf_2 = imf[1, :, :]  # IMFs corresponding to the 2nd component
-    imf_3 = imf[2, :, :]  # IMFs corresponding to the 3rd component
-    imf_4 = imf[3, :, :]  # IMFs corresponding to the 3rd component
-    imf_5 = imf[4, :, :]  # IMFs corresponding to the 3rd component
-    imf_6 = imf[5, :, :]  # IMFs corresponding to the 3rd component
-
-    motion_data_size = original_data.shape
-    dataset = np.zeros((num_generated, motion_data_size[0], motion_data_size[1]))
-
-    # Create datasets by perturbing IMFs
-    for i in range(num_generated):
-        # normal distribution perturbation
-        imf_1_prime = imf_1 * abs(np.random.normal(loc=1, scale=0.33))
-        imf_2_prime = imf_2 * abs(np.random.normal(loc=1, scale=0.33))
-        imf_3_prime = imf_3 * abs(np.random.normal(loc=1, scale=0.33))
-        imf_4_prime = imf_4 * abs(np.random.normal(loc=1, scale=0.33))
-        imf_5_prime = imf_5 * abs(np.random.normal(loc=1, scale=0.33))
-
-        # uniform distribution perturbation
-        # imf_1_prime = imf_1 * np.random.uniform(0, 2)
-        # imf_2_prime = imf_2 * np.random.uniform(0, 2)
-        # imf_3_prime = imf_3 * np.random.uniform(0, 2)
-        # imf_4_prime = imf_4 * np.random.uniform(0, 2)
-        # imf_5_prime = imf_5 * np.random.uniform(0, 2)
-
-        new_dataset = (imf_1_prime + imf_2_prime + imf_3_prime + imf_4_prime + imf_5_prime + imf_6).T
-        dataset[i] = new_dataset
-    
-    return dataset
-
-
-
-
-def MixupAugmentation(original_dataset, alpha, num_generated):
-    # Create dataset through mix-up augmentation
-    new_dataset = np.zeros((original_dataset.shape[0],original_dataset.shape[1], original_dataset.shape[2] ))
-    for i in range(num_generated):
-        # extract two random datasets
-        r1 = np.random.randint(0, original_dataset.shape[0]-1)
-        r2 = np.random.randint(0, original_dataset.shape[0]-1)
-        si = original_dataset[r1]
-        sj = original_dataset[r2]
-
-        # slice datasets
-        d = np.random.randint(0, original_dataset.shape[1])
-        hi = si[:d, :]
-        fi = si[d:, :]
-        hj = sj[:d, :]
-        fj = sj[d:, :]
-
-        lambda_ = np.random.beta(alpha, alpha)
-
-        mixed_past = lambda_ * hi + (1 - lambda_) * hj
-        mixed_future = lambda_ * fi + (1 - lambda_) * fj
-        mixed_sequence = np.concatenate([mixed_past, mixed_future], axis=0)
-        new_dataset[i] = mixed_sequence
-    
-    return new_dataset
-
-
-
-
-def plotMulvariateCurves(filename, dataset):
+def plotMulvariateCurves(filename, dataset, original_data):
     num_features = dataset.shape[2]
     num_generated = dataset.shape[0]
 
@@ -150,30 +56,25 @@ def plotMulvariateCurves(filename, dataset):
         plt.tight_layout()
 
 
-
-
-
-
-
-
-
-
-
 h, df, t = parse_motion_file("/Users/FranklinZhao/OpenSimProject/Simulation/Models/gait2354/inverse_kinematics_data/subject01_walk1_ik.mot")
 original_data = df.to_numpy()
 time = t.to_numpy()
 feature_headers = list(df.columns)
 
-# EMD_dataset = EMDAugmentation(original_data, 100)
-# plotMulvariateCurves("EMD_normal.pdf", EMD_dataset)
+def lowpass_filter(data, fs, fc, order):
+    w = fc / (fs / 2)
+    b, a = signal.butter(order, w, 'low')
+    output = signal.filtfilt(b, a, data, axis=0)
+    return output
 
-# EMD_Mixup_dataset = MixupAugmentation(EMD_dataset, 0.5, 100)
-# plotMulvariateCurves("EMD_normal_Mixup.pdf", EMD_Mixup_dataset)
+smooth_data = lowpass_filter(original_data, 60, 10, 5)
 
+bruh = TimePointGaussianAugmentation(smooth_data, time, dataset_freq=60, sampling_freq=15, variance_mod=0.05, num_generated=100)
 
-# df2 = pd.DataFrame(EMD_Mixup_dataset[0], columns = list(df.columns))
-# write_motion_file(h, df2, t, "bruhmoment")
+print(bruh.shape)
+smooth_bruh = np.zeros(bruh.shape)
+for i in range(bruh.shape[0]):
+    smooth_bruh[i] = lowpass_filter(bruh[i], 60, 10, 5)
 
+plotMulvariateCurves("bruh.pdf", smooth_bruh, smooth_data)
 
-bruh = TimePointGaussianAugmentation(original_data, time, dataset_freq=200, sampling_freq=40, variance_mod=0.05, num_generated=100)
-plotMulvariateCurves("bruh.pdf", bruh)
