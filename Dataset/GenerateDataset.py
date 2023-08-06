@@ -55,14 +55,6 @@ def parse_IMU_file(input_file_path):
     # display(dataframe)
     display(dataframe)
 
-
-
-
-
-
-
-
-
 # augment motion data by sampling gaussian random points and interpolating
 def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, variance_mod, num_generated):
     
@@ -86,7 +78,7 @@ def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, va
             # for each row
             gaussian_points[:, i] = np.random.normal(loc=0, scale=std_dev[i], size=len(time_points)) + points[:, i]
             # interpolate for each column (feature)
-            cs = interpolate.Akima1DInterpolator(time_points, gaussian_points[:, i])
+            cs = interpolate.CubicSpline(time_points, gaussian_points[:, i])
             # sample values for original frequency
             new_motion[:, i] = cs(time)
 
@@ -98,7 +90,7 @@ def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, va
 # plot each feature of multivariate timeseries
 def plotMulvariateCurves(filename, dataset, original_data):
     # num_features = dataset.shape[2]
-    num_features = 2
+    num_features = 3
     num_generated = dataset.shape[0]
 
     fig, ax = plt.subplots(figsize=(20, 15), nrows=num_features)
@@ -142,7 +134,7 @@ feature_headers = list(df.columns)
 # smooth original data
 smooth_data = lowpass_filter(original_data, 200, 10, 5, 0)
 # create augmented motions
-bruh = TimePointGaussianAugmentation(smooth_data, time, dataset_freq=200, sampling_freq=10, variance_mod=0.05, num_generated=20)
+bruh = TimePointGaussianAugmentation(smooth_data, time, dataset_freq=200, sampling_freq=5, variance_mod=0.05, num_generated=20)
 # smooth augmented motions
 smooth_bruh = lowpass_filter(bruh, 200, 10, 5, 1)
 # plot
