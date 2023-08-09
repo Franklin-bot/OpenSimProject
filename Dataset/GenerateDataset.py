@@ -68,6 +68,7 @@ def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, va
     time_points = time[sample_rows]
     # array of values sampled
     points = dataset[sample_rows, :]
+    # derivative at points
 
     new_dataset = np.zeros((num_generated, *dataset.shape))
     for k in tqdm(range(num_generated)):
@@ -88,22 +89,23 @@ def TimePointGaussianAugmentation(dataset, time, dataset_freq, sampling_freq, va
     return new_dataset
 
 # plot each feature of multivariate timeseries
-def plotMulvariateCurves(filename, dataset, original_data):
-    # num_features = dataset.shape[2]
-    num_features = 3
+def plotMulvariateCurves(filename, dataset, original_data, time, feature_headers):
+    num_features = dataset.shape[2]
     num_generated = dataset.shape[0]
 
-    fig, ax = plt.subplots(figsize=(20, 15), nrows=num_features)
-    for i in tqdm(range(num_features)):
-        for j in range(num_generated):
-            ax[i].plot(time, dataset[j][:, i])
-            ax[i].plot(time, original_data[:, i], color="black")
-        ax[i].set_xlabel("time")
-        ax[i].set_ylabel("Kinematics values")
-        ax[i].set_title(feature_headers[i])
-        
-    plt.tight_layout()
-    plt.show()
+    with PdfPages(filename) as pdf:
+        for i in tqdm(range(num_features)):
+            fig, ax = plt.subplots(figsize=(8, 6))
+            for j in range(num_generated):
+                ax.plot(time[:2000], (dataset[j][:, i])[:2000])
+                ax.plot(time[:2000], (original_data[:, i])[:2000], color="black")
+            ax.set_xlabel("time")
+            ax.set_ylabel("Kinematics values")
+            ax.set_title(feature_headers[i])
+            pdf.savefig(fig)
+            plt.close(fig)
+            
+        plt.tight_layout()
 
 
 # lowpass filter
@@ -124,20 +126,18 @@ def plot_timepoint_distribution(dataset, num):
     plt.tight_layout()
     plt.show()
 
+if __name__ == "__main__":
+    # extract original data
+    h, df, t = parse_motion_file("/Users/FranklinZhao/OpenSimProject/Dataset/SN001_0024_tug_01.mot")
+    original_data = df.to_numpy()
+    time = t.to_numpy()
+    feature_headers = list(df.columns)
 
-# extract original data
-h, df, t = parse_motion_file("/Users/FranklinZhao/OpenSimProject/Dataset/SN001_0024_tug_01.mot")
-original_data = df.to_numpy()
-time = t.to_numpy()
-feature_headers = list(df.columns)
-
-# smooth original data
-smooth_data = lowpass_filter(original_data, 200, 10, 5, 0)
-# create augmented motions
-bruh = TimePointGaussianAugmentation(smooth_data, time, dataset_freq=200, sampling_freq=5, variance_mod=0.05, num_generated=20)
-# smooth augmented motions
-smooth_bruh = lowpass_filter(bruh, 200, 10, 5, 1)
-# plot
-plotMulvariateCurves("bruh.pdf", smooth_bruh, smooth_data)
-
-# plot_timepoint_distribution(dataset=smooth_bruh, num=3)
+    # smooth original data
+    smooth_data = lowpass_filter(original_data, 200, 10, 5, 0)
+    # create augmented motions
+    bruh = TimePointGaussianAugmentation(smooth_data, time, dataset_freq=200, sampling_freq=5, variance_mod=0.05, num_generated=5)
+    # smooth augmented motions
+    smooth_bruh = lowpass_filter(bruh, 200, 10, 5, 1)
+    # plot
+    plotMulvariateCurves("bruh.pdf", smooth_bruh, smooth_data)

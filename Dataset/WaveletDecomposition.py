@@ -67,12 +67,13 @@ def WaveletAugmentation(data, num_generated):
         for i in range (data.shape[1]):
             signal = data[:, i]
             coeffs = pywt.wavedec(signal, wavelet, level = levels, mode='symmetric')
-            coeffs[0] += np.random.normal(loc = 0, scale= perturbation_factor[i]*1, size=len(coeffs[0]))
-            coeffs[1] += np.random.normal(loc = 0, scale= perturbation_factor[i]*0.25, size=len(coeffs[1]))
-            coeffs[2] += np.random.normal(loc = 0, scale= perturbation_factor[i]*0.1, size=len(coeffs[2]))
-            coeffs[3] += np.random.normal(loc = 0, scale= perturbation_factor[i]*0.05, size=len(coeffs[3]))
+            coeffs[0] *= np.random.normal(loc=1, scale=0.2, size=len(coeffs[0]))
+            # coeffs[0] *= np.random.uniform(0, 2, size=len(coeffs[0]))
+            # coeffs[1] *= np.random.normal(loc=1, scale=0.25, size=len(coeffs[1]))
+            # coeffs[2] += np.random.normal(loc = 0, scale= perturbation_factor[i]*0.1, size=len(coeffs[2]))
+            # coeffs[3] += np.random.normal(loc = 0, scale= perturbation_factor[i]*0.05, size=len(coeffs[3]))
             # # coeffs[4] += np.random.normal(loc = 0, scale= perturbation_factor[i]*0.01, size=len(coeffs[4]))
-            # coeffs[8] += np.random.normal(loc = 0, scale= perturbation_factor[i]*2, size=len(coeffs[8]))
+            # coeffs[3] *= np.random.normal(loc=1, scale=0.25, size=len(coeffs[3]))
             perturbed_signal = pywt.waverec(coeffs, wavelet)
             perturbed_signal = perturbed_signal[:len(signal)]
             new_data[:, i] = perturbed_signal
@@ -89,7 +90,7 @@ feature_headers = list(df.columns)
 # smooth original data
 smooth_data = lowpass_filter(original_data, 200, 10, 5, 0)
 # create augmented motions
-bruh = WaveletAugmentation(smooth_data, 20)
+bruh = WaveletAugmentation(smooth_data, 10)
 # smooth augmented motions
 smooth_bruh = lowpass_filter(bruh, 200, 10, 5, 1)
 # plot
