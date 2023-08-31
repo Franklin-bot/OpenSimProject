@@ -11,12 +11,7 @@ import pywt
 from PyEMD import EMD
 from scipy.ndimage import gaussian_filter1d
 
-# lowpass filter
-def lowpass_filter(data, fs, fc, order, axis):
-    w = fc / (fs / 2)
-    b, a = signal.butter(order, w, 'low')
-    output = signal.filtfilt(b, a, data, axis=axis)
-    return output
+
 
 def plotMulvariateCurves(filename, dataset, original_data):
     num_features = dataset.shape[2]

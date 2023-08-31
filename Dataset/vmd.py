@@ -51,7 +51,7 @@ def plotMulvariateSplines(filename, dataset, time, time_points, distortion, feat
             fig, ax = plt.subplots(figsize=(8, 6))
             for j in range(dataset.shape[1]):
                 ax.plot(time, (dataset[i][j, :]))
-                ax.scatter(time_points[i][j, :], distortion[i][j, :], color='red')
+                ax.scatter(time_points, distortion[i][j, :], color='red')
             ax.set_xlabel("time")
             ax.set_title(feature_headers[i])
             pdf.savefig(fig)
@@ -105,16 +105,13 @@ def movingAverageVelocities(data):
 # n_points = number of knots
 # m = multiplier to apply when scaling, usually the range of the current feature
 
-def MagnitudeWarpRow(data, time, n_points, m):
-    step = int(len(time) / n_points)
-    time_indices = np.arange(0, len(time), step, dtype=int)
+def MagnitudeWarpRow(data, time, n_points, m, mav):
+
+    time_indices = np.linspace(start=0, stop=len(time)-1, num=n_points, dtype=int, endpoint=True)
     time_points = time[time_indices]
 
-    mav = movingAverageVelocities(data)
-
-    distortion = np.zeros(len(time_points))
-    for i in range(len(distortion)):
-        distortion[i] = np.random.normal(loc=0, scale= m*mav[(time_indices[i])])
+    distortion = np.random.normal(loc=0, scale=m, size=len(time_indices))
+    distortion *= mav[time_indices]
 
     new_data = np.zeros(len(data))
     cs = interpolate.CubicSpline(time_points, distortion)
@@ -149,14 +146,14 @@ def VMDAugment(data, num_generated):
     tol = 1e-7
     num_knots = 8
 
-    # create matrices to store spline, distortion, and knot time point data for graphing
+    # create matrices to store spline, distortion data for graphing
     splines = np.zeros((data.shape[1], num_generated, data.shape[0]))
-    distortions = np.zeros((data.shape[1], num_generated, num_knots + math.ceil((7510%num_knots)/num_knots)))
-    time_points = np.zeros((data.shape[1], num_generated, num_knots + math.ceil((7510%num_knots)/num_knots)))
+    distortions = np.zeros((data.shape[1], num_generated, num_knots))
     
     # create matrices to store imfs and the imf ranges
     imfs = np.zeros((data.shape[1], K, data.shape[0]))
     imf_ranges = np.zeros((data.shape[1], K))
+    mavs = np.zeros((data.shape))
 
     # for each feature, conduct VMD and store the imfs and imf ranges into the matrices
     # this is so that VMD only has to be conducted once, saving time
@@ -164,6 +161,7 @@ def VMDAugment(data, num_generated):
         u, u_hat, omega = VMD(data[:, i], alpha, tau, K, DC, init, tol)
         imfs[i, :, :] = u
         imf_ranges[i, :] = np.ptp(u, axis=1)
+        mavs[:, i] = movingAverageVelocities(data[:, i]) 
 
     new_dataset = np.zeros((num_generated, *data.shape))
     # create new datasets
@@ -172,16 +170,16 @@ def VMDAugment(data, num_generated):
         for j in range(data.shape[1]):
             u_new = imfs[j].copy()
             # conduct magnitude warping on the residual
-            u_new[0, :], s, t, d = MagnitudeWarpRow(u_new[0,:], time, num_knots, imf_ranges[j, 0])
-            # store splines, time_points, and distortions for graphing
+            u_new[0, :], s, t, d = MagnitudeWarpRow(u_new[0,:], time, num_knots, imf_ranges[j, 0], mavs[:, j])
+            # store splines and distortions for graphing
             splines[j, i, :] = s
-            time_points[j, i, :] = t
             distortions[j, i, :] = d
+            # create new signal
             new_signal = np.sum(u_new,axis=0)
             new_data[:, j] = new_signal
         new_dataset[i, :, :] = new_data
 
-    return new_dataset, splines, time_points, distortions
+    return new_dataset, splines, t, distortions
 
 # parse the .mot file
 h, df, t = parse_motion_file("/Users/FranklinZhao/OpenSimProject/Simulation/Models/Rajapogal_2015/inverse_kinematics_data/SN001_0024_tug_01.mot")

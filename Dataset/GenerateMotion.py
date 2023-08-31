@@ -59,6 +59,21 @@ def write_motion_file(header, dataframe, time, new_file_name):
     dataframe.insert(loc=0, column = 'time', value = time)
     dataframe.to_csv(path_or_buf=new_file_path, sep='\t', header=True, mode="a", index=False)
 
+def movingAverageVelocities(data):
+
+    window_size = 401
+    window_half = int(window_size/2)
+    velocities = abs(np.gradient(data))
+    average_velocities = np.zeros(data.shape[0])
+
+    for i in range(data.shape[0]):
+        index = np.clip([i-window_half, i+window_half], 0, data.shape[0]-1)
+        average_velocities[i] = np.mean((velocities[index[0] : index[1]]))
+    
+    # normalize the average velocities, (currently, normalized between 2% and 10% to be multiplied by range)
+    average_velocities = minmax_scale(average_velocities, feature_range=(0.02,0.1))
+    return average_velocities
+
 # plot each feature of multivariate timeseries
 def plotMulvariateCurves(filename, dataset, original_data, time, feature_headers):
     num_features = dataset.shape[2]
@@ -112,7 +127,6 @@ def MagnitudeOffset(data, std_dev):
     offsets = np.random.normal(loc=0, scale=std_dev, size=n_features)
     return data + offsets
 
-
 def MagnitudeWarp(data, time, n_points):
     step = int(len(time) / n_points)
     time_indices = np.arange(0, len(time), step, dtype=int)
@@ -134,7 +148,6 @@ def TimeWarp(data, time, n_points):
     time_indices = (np.arange(0, len(time), step, dtype=int))
     time_points = time[time_indices]
     distortion = np.random.normal(loc=1, scale=0.05, size=len(time_indices))
-
 
 
     new_data = np.zeros(data.shape)
@@ -182,51 +195,68 @@ def EMDDecomp(data):
 
     imfs_list = []
     imfs_ranges_list = []
+    mavs = np.zeros((data.shape))
     for j in tqdm(range(data.shape[1])):
         signal = data[:, j]
         emd = EMD.EMD()
         imfs = emd(signal)
         imfs_list.append(imfs)
         imfs_ranges_list.append(np.ptp(imfs, axis = 1))
+        mavs[:, j] = movingAverageVelocities(data[:, j]) 
+    
+    print(imfs_ranges_list[1])
+    return imfs_list, imfs_ranges_list, mavs
 
-    return imfs_list, imfs_ranges_list
+# def MagnitudeWarpRow(data, time, n_points, m):
+#     step = int(len(time) / n_points)
+#     time_indices = np.arange(0, len(time), step, dtype=int)
+#     time_points = time[time_indices]
 
-def MagnitudeWarpRow(data, time, n_points, m):
-    step = int(len(time) / n_points)
-    time_indices = np.arange(0, len(time), step, dtype=int)
+#     new_data = np.zeros(len(data))
+#     distortion = np.random.normal(loc=1, scale=0.2*m, size=len(time_indices))
+
+#     cs = interpolate.CubicSpline(time_points, distortion)
+#     new_data = data*cs(time)
+
+#     return new_data
+
+def MagnitudeWarpRow(data, time, n_points, m, mav):
+
+    time_indices = np.linspace(start=0, stop=len(time)-1, num=n_points, dtype=int, endpoint=True)
     time_points = time[time_indices]
 
-    new_data = np.zeros(len(data))
-    distortion = np.random.normal(loc=1, scale=0.2*m, size=len(time_indices))
+    distortion = np.random.normal(loc=0, scale=m, size=len(time_indices))
+    distortion *= mav[time_indices]
 
+    new_data = np.zeros(len(data))
     cs = interpolate.CubicSpline(time_points, distortion)
-    new_data = data*cs(time)
+    spline = cs(time)
+    new_data = data + spline
 
     return new_data
 
 # perturb EMD
-def EMDAugment(data, imfs_list, imf_ranges_list):
+def EMDAugment(data, imfs_list, imf_ranges_list, mavs):
+
+    num_knots = 8
 
     new_data = np.zeros(data.shape)
     for i in range(len(imfs_list)):
         imfs_new = imfs_list[i]
-        imf_ranges_list[i] = 1 - (minmax_scale(imf_ranges_list[i], feature_range=(0, 1)))
-
-        imfs_new[0, :] = MagnitudeWarpRow(imfs_new[0,:], time, 3, (imf_ranges_list[i])[0])
-        imfs_new[1, :] = MagnitudeWarpRow(imfs_new[1,:], time, 3, (imf_ranges_list[i])[1])
-        imfs_new[2, :] = MagnitudeWarpRow(imfs_new[2,:], time, 3, (imf_ranges_list[i])[2])
+        imfs_new[0, :] = MagnitudeWarpRow(imfs_new[0,:], time, num_knots, (imf_ranges_list[i])[0], mavs[:, i])
         new_data[:, i] = sum(imfs_new)
     return new_data
 
 def generateNewDataset(data, time, n_generated):
 
     ranges = np.ptp(data, axis=0)
-    imfs_list, imf_ranges_list = EMDDecomp(data)
+    imfs_list, imf_ranges_list, mavs = EMDDecomp(data)
+        
 
     new_dataset = np.zeros((n_generated, *data.shape))
     for i in tqdm(range(n_generated)):
         # new_dataset[i, :, :] = WaveletDecomp(TimeWarp(data, time, 2))
-        new_dataset[i, :, :] = (EMDAugment(data, imfs_list, imf_ranges_list))
+        new_dataset[i, :, :] = (EMDAugment(data, imfs_list, imf_ranges_list, mavs))
     return new_dataset
 
 
