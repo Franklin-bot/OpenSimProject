@@ -102,4 +102,3 @@ def convertTo360Degrees(signal):
     signal = [math.acos(rad) for rad in signal]
     signal = [math.degrees(rad) for rad in signal]
     return signal
-

@@ -258,15 +258,15 @@ def generateNewDataset(data, time, n_generated):
         # new_dataset[i, :, :] = WaveletDecomp(TimeWarp(data, time, 2))
         new_dataset[i, :, :] = (EMDAugment(data, imfs_list, imf_ranges_list, mavs))
     return new_dataset
+ 
 
 
+# h, df, t = parse_motion_file("/Users/FranklinZhao/OpenSimProject/Simulation/Models/Rajapogal_2015/inverse_kinematics_data/SN001_0024_tug_01.mot")
+# original_data = df.to_numpy()
+# original_data = original_data[:, :6]
+# time = t.to_numpy()
+# feature_headers = list(df.columns)
 
-h, df, t = parse_motion_file("/Users/FranklinZhao/OpenSimProject/Simulation/Models/Rajapogal_2015/inverse_kinematics_data/SN001_0024_tug_01.mot")
-original_data = df.to_numpy()
-original_data = original_data[:, :6]
-time = t.to_numpy()
-feature_headers = list(df.columns)
-
-# smooth_data = lowpass_filter(original_data, 200, 10, 5, 1)
-bruh = generateNewDataset(original_data, time, 20)
-plotMulvariateCurves("EmdTimeWarp.pdf", bruh, original_data, time, feature_headers)
+# # smooth_data = lowpass_filter(original_data, 200, 10, 5, 1)
+# bruh = generateNewDataset(original_data, time, 20)
+# plotMulvariateCurves("EmdTimeWarp.pdf", bruh, original_data, time, feature_headers)
