@@ -9,7 +9,7 @@ def add_imu(component_set, imu_name, socket_frame):
     socket_frame_element = ET.SubElement(imu, 'socket_frame')
     socket_frame_element.text = socket_frame
 
-def add_imu_frame(root, body, name, translation):
+def add_imu_frame(root, body, name, translation, rotation):
     body = root.find(f".//Body[@name=\'{body}\']")
     components = body.find('components')
 
@@ -30,25 +30,35 @@ def add_imu_frame(root, body, name, translation):
     translation_element.text = arrayToString(translation)
     
     orientation = ET.SubElement(physical_offset_frame, 'orientation')
-    orientation.text = '0 1.57 1.57'
+    orientation.text = arrayToString(rotation)
 
-def modifyIMUTranslation(tree, body, imuName, modifier):
+def modifyIMUTranslation(tree, body, imuName, vertical_modifier, radius):
     root = tree.getroot()
-    xml_header = '<?xml version="1.0" encoding="UTF-8" ?>'
-    modifiers = [[0, 0, modifier], [0, modifier, modifier], [0, modifier, 0], [0, modifier, -modifier], [0, 0, -modifier], [0, -modifier, -modifier], [0, -modifier, 0], [0, -modifier, modifier]]
+    vertical_modifiers = [[0, 0, 0,], [0, vertical_modifier, 0], [0, -vertical_modifier, 0]]
+    rotations = [[0, 0, 1.57], [0, 0.393, 1.57], [0, 0.785, 1.57], [0, 1.178, 1.57], [0, 1.571, 1.57], [0, 1.961, 1.57], [0, 2.356, 1.57], [0, 2.7489, 1.57], [0, 3.1416, 1.57], [0, 3.5343, 1.57],\
+            [0, 3.927, 1.57], [0, 4.3197, 1.57], [0, 4.7124, 1.57], [0, 5.1051, 1.57], [0, 5.4978, 1.57], [0, 5.8905, 1.57]]
     component_set = root.find(".//ComponentSet[@name='componentset']/objects")
 
     curr_position = root.find(f".//Body[@name='{body}']/components/PhysicalOffsetFrame[@name='{imuName}']/translation")
     curr_position = curr_position.text
-# Add a new IMU to ulna_l socket frame
+    curr_position = parseStringArray(curr_position)
+    curr_position[0] = 0
+    curr_position = arrayToString(curr_position)
 
-    for i, m, in enumerate(modifiers):
-        new_imu_name = f"{imuName}{i+1}"
-        new_imu_position = np.array(parseStringArray(curr_position)) + np.array(m)
-        print(arrayToString(new_imu_position))
-        new_imu_frame = f"{new_imu_name}_frame"
-        add_imu_frame(root, body, new_imu_frame, new_imu_position)
-        add_imu(component_set, new_imu_name, f'/bodyset/{body}/'+new_imu_name+'_frame')
+# Add a new IMU to ulna_l socket frame
+    imuNum = 1
+    for m in vertical_modifiers:
+        for r in rotations:
+            new_imu_name = f"{imuName}{imuNum+1}"
+            new_imu_position = np.array(parseStringArray(curr_position)) + np.array(m)
+            new_x_position = radius * np.sin(r[1])
+            new_z_position = radius * np.cos(r[1])
+            new_imu_position += np.array([new_x_position, 0, new_z_position])
+            new_imu_frame = f"{new_imu_name}_frame"
+            add_imu_frame(root, body, new_imu_frame, new_imu_position, r)
+            add_imu(component_set, new_imu_name, f'/bodyset/{body}/'+new_imu_name+'_frame')
+            imuNum += 1
+            print(r)
 
 
 # Save the modified XML to a new file
@@ -71,13 +81,15 @@ def arrayToString(arr):
     return " ".join(str(f) for f in arr)
 
 
-translation = 0.05
+vertical_translation = 0.025
+upper_radius = 0.054
+lower_radius = 0.054 
 tree = ET.parse(filepath)
-tree = modifyIMUTranslation(tree, "ulna_l", "ulna_l_imu", translation)
-tree = modifyIMUTranslation(tree, "ulna_r", "ulna_r_imu", translation)
-tree = modifyIMUTranslation(tree, "humerus_l", "humerus_l_imu", translation)
-tree = modifyIMUTranslation(tree, "humerus_r", "humerus_r_imu", translation)
-tree.write('modified_xml_file3.osim')
+tree = modifyIMUTranslation(tree, "ulna_l", "ulna_l_imu", vertical_translation, lower_radius)
+tree = modifyIMUTranslation(tree, "ulna_r", "ulna_r_imu", vertical_translation, lower_radius)
+tree = modifyIMUTranslation(tree, "humerus_l", "humerus_l_imu", vertical_translation, upper_radius)
+tree = modifyIMUTranslation(tree, "humerus_r", "humerus_r_imu", vertical_translation, upper_radius)
+tree.write('modified_xml_file4.osim')
 
 
 

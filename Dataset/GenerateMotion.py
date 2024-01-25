@@ -2,7 +2,6 @@
 #   Generate gaussian noise for each dimension of the motion data
 #   Add noise for each dimension at each time step
 
-
 import pandas as pd
 import numpy as np
 from itertools import islice
